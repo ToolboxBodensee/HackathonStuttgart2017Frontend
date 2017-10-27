@@ -1,23 +1,25 @@
 {
-    "name":         "wriggle-frontend",
-    "description":  "",
-    "main":         "index.js",
-    "authors":      [
-        "Thomas Kekeisen <github@tk.ca.kekeisen.it>"
-    ],
-    "license":      "ISC",
-    "homepage":     "",
-    "ignore":       [
-        "**/.*",
-        "node_modules",
-        "bower_components",
-        "test",
-        "tests"
-    ],
-    "dependencies": {
-        "angular":           "^1.6.5",
-        "angular-ui-router": "^1.0.5",
-        "jquery":            "^3.2.1",
-        "bootstrap":         "^3.3.7"
-    }
+  "name": "wriggle-frontend",
+  "description": "",
+  "main": "index.js",
+  "authors": [
+    "Thomas Kekeisen <github@tk.ca.kekeisen.it>"
+  ],
+  "license": "ISC",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.6.5",
+    "angular-ui-router": "^1.0.5",
+    "jquery": "^3.2.1",
+    "bootstrap": "^3.3.7",
+    "phaser-ce": "^2.9.1",
+    "angular-socket-io": "^0.7.0"
+  }
 }

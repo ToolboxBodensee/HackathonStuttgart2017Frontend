@@ -78,6 +78,9 @@ gulp.task('copyJs', function () {
             'bower_components/angular/angular.min.js',
             'bower_components/angular-ui-router/release/angular-ui-router.min.js',
             'bower_components/angular-ui-router/release/stateEvents.min.js',
+            'node_modules/socket.io-client/dist/socket.io.js',
+            'bower_components/angular-socket-io/socket.min.js',
+            'bower_components/phaser-ce/build/phaser.min.js',
             'tmp/wriggle.min.js'
         ])
         .pipe(concat('wriggle.js'))
