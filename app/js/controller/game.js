@@ -64,7 +64,8 @@ angular.module('wriggle').controller(
             index: 0,
             intro: false,
             presentation: true,
-            presentationTime: 5 * 60,
+            presentationTime: 3 * 60,
+            numberOfSlides: $('.slide').length,
             timer: moment(this.presentationTime * 1000).format('mm:ss'),
             gameInitialized:   false,
             socketInitialized: false
@@ -89,10 +90,13 @@ angular.module('wriggle').controller(
                     $scope.status.presentationTime--;
                     $scope.status.timer = moment($scope.status.presentationTime * 1000).format('mm:ss');
                 })
-
                 setTimeout($scope.startTimer, 1000);
             }
         };
+
+        $scope.presentation = {
+            indicator: $scope.status.index.toString() + ' / ' + $scope.status.numberOfSlides.toString()
+        }
 
         /**
          * #################################################################################################################
@@ -193,20 +197,32 @@ angular.module('wriggle').controller(
                 $scope.socket.instance.emit(events.startGame);
             } else if (keyCode === 80) {
                 // P
-
-                if($scope.status.index === 0) {
-                    $scope.startTimer();
-                }
-                if($scope.status.index < 3) {
-                    $scope.$apply(function () {
-                        $scope.status.intro = false;
-                        $scope.status.index++;
-                    });
-                    return;
-                }
+                $scope.startTimer();
                 $scope.$apply(function() {
-                    $scope.status.presentation = false;
+                    $scope.status.intro = false;
+                    $scope.status.index = 1;
+                    $scope.presentation.indicator = $scope.status.index.toString() + ' / ' + $scope.status.numberOfSlides.toString();
                 })
+            } else if (keyCode === 37) {
+                // Left
+                if($scope.status.index > 1) {
+                    $scope.$apply(function () {
+                        $scope.status.index--
+                        $scope.presentation.indicator = $scope.status.index.toString() + ' / ' + $scope.status.numberOfSlides.toString();
+                    })
+                }
+            } else if (keyCode === 39) {
+                // Right
+                if($scope.status.index <= $scope.status.numberOfSlides - 1) {
+                    $scope.$apply(function () {
+                        $scope.status.index++
+                        $scope.presentation.indicator = $scope.status.index.toString() + ' / ' + $scope.status.numberOfSlides.toString();
+                    });
+                } else {
+                    $scope.$apply(function() {
+                        $scope.status.presentation = false;
+                    })
+                }
             }
         };
 
