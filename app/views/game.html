@@ -12,7 +12,7 @@
     </div>
 
     <div id="waiting-for-socket-overlay" ng-show="!status.socketInitialized">
-        TODO: waiting for socket
+        waiting for socket
     </div>
     <div id="waiting-for-phaser-overlay" ng-show="!status.gameInitialized">
         TODO: waiting for game
@@ -20,34 +20,62 @@
 
     <div id="presentation" ng-show="status.presentation">
         <div id="indicator">{{presentation.indicator}}</div>
-        <div ng-show="status.index == 1" class="slide">
+        <div ng-show="status.index === 1" class="slide">
             <h1>what's the issue?</h1>
             <h2>people dont meet irl</h2>
             <h2>people dont move enough</h2>
             <h2>missing social interaction</h2>
         </div>
-        <div ng-show="status.index == 2" class="slide">
+        <div ng-show="status.index === 2" class="slide">
             <h1>solving these problems</h1>
+            <h2>bla</h2>
+            <h2>bla</h2>
+            <h2>bla</h2>
         </div>
-        <div ng-show="status.index == 3" class="slide">
+        <div ng-show="status.index === 3" class="slide">
             <h1>our stack</h1>
-            <h2>nodejs-backend as gameserver</h2>
-            <h2>android-application</h2>
-            <h2>responsive web-app</h2>
-            <h2>angular-web-app</h2>
+            <h2><div class="icon">🕹</div> nodejs-backend as gameserver</h2>
+            <h2><div class="icon">⌚</div> android-app for wristband</h2>
+            <h2><div class="icon">📱</div> responsive web-app</h2>
+            <h2><div class="icon">💻</div> angular-web-app</h2>
         </div>
-        <div ng-show="status.index == 4" class="slide">
+        <div ng-show="status.index === 4" class="slide">
+            <div class="image-slide">
+                <figure>
+                    <img src="images/iphone_app.png" width="300" alt="">
+                </figure>
+                <div class="text">
+                    <h1>android app</h1>
+                    <h2><div class="icon wrist">👊</div> playing with gesture wrist band</h2>
+                </div>
+            </div>
+        </div>
+        <div ng-show="status.index === 5" class="slide">
+            <div class="image-slide">
+                <figure>
+                    <img src="images/iphone_app.png" width="300" alt="">
+                </figure>
+                <div class="text">
+                    <h1>android app</h1>
+                    <h2><div class="icon wrist">👊</div> playing with gesture wrist band</h2>
+                </div>
+            </div>
+        </div>
+        <div ng-show="status.index === 6" class="slide">
             <div class="image-slide">
                 <figure>
                     <img src="images/mobile_web_app.jpeg" width="300" alt="">
                 </figure>
                 <div class="text">
                     <h1>reponsive web-app</h1>
-                    <h2>playing without wrist-band</h2>
+                    <h2><div class="icon wrist">📱</div> playing without wrist-band</h2>
                 </div>
             </div>
         </div>
-        <div ng-show="status.index == 5" class="slide">
+        <div ng-show="status.index === 7" class="slide">
+            <h1>future goals?</h1>
+        </div>
+        <div ng-show="status.index === 8" class="slide">
             <h1>future goals?</h1>
         </div>
     </div>
