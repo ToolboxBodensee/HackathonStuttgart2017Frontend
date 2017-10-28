@@ -143,12 +143,15 @@ angular.module('wriggle').controller(
         $scope.gameStop = function () {
             $scope.socket.instance.emit(events.stopGame);
 
-            for (const playerListPlayerId in $scope.game.playerList) {
-                // @formatter:off
-                const currentPlayer  = $scope.game.playerList[playerListPlayerId];
-                currentPlayer.points = [];
-                // @formatter:on
-            }
+            $scope.$apply(function () {
+                for (const playerListPlayerId in $scope.game.playerList) {
+                    // @formatter:off
+                    const currentPlayer  = $scope.game.playerList[playerListPlayerId];
+                    currentPlayer.dead   = false;
+                    currentPlayer.points = [];
+                    // @formatter:on
+                }
+            });
         };
 
         /**
@@ -238,7 +241,7 @@ angular.module('wriggle').controller(
                             lastPosition = currentPoint;
                         }
 
-                        if (currentPlayer.fakePosition) {
+                        if (currentPlayer.fakePosition && lastPosition && lastPosition.x && lastPosition.y) {
                             bmd.ctx.moveTo(currentPlayer.fakePosition.x, currentPlayer.fakePosition.y);
                             bmd.ctx.lineTo(lastPosition.x, lastPosition.y);
                             bmd.ctx.stroke();
@@ -296,7 +299,9 @@ angular.module('wriggle').controller(
         $scope.socketCollision = function (data) {
             $log.log('GameController: socketCollision', data);
 
-            // TODO
+            $scope.$apply(function () {
+                $scope.game.playerList[data.deadPlayer].dead = true;
+            });
         };
 
         $scope.socketConnected = function () {
