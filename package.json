@@ -4,17 +4,25 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "npm run bower  && npm run gulp && node server.js",
+    "gulp": "./node_modules/.bin/gulp build",
+    "bower": "./node_modules/.bin/bower install",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "git@github.com:ToolboxBodensee/HackathonStuttgart2017Frontend.git"
   },
+  "engines": {
+    "node": ">8.5.0"
+  },
   "author": "",
   "license": "ISC",
   "homepage": "https://github.com/ToolboxBodensee/HackathonStuttgart2017Frontend",
   "dependencies": {
+    "bower": "^1.8.2",
     "del": "^3.0.0",
+    "express": "^4.16.2",
     "gulp": "^3.9.1",
     "gulp-clean-css": "^3.7.0",
     "gulp-concat": "^2.6.1",
@@ -28,9 +36,7 @@
     "momentjs": "^2.0.0",
     "run-sequence": "^2.0.0",
     "socket.io": "^2.0.4",
-    "vinyl-ftp": "^0.6.0"
-  },
-  "devDependencies": {
+    "vinyl-ftp": "^0.6.0",
     "gulp-watch": "^4.3.11"
   }
 }
