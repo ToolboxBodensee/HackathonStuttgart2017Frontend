@@ -4,7 +4,10 @@
     </div>
     <div id="player-list">
         <ul>
-            <li>test</li>
+            <li ng-repeat="player in game.playerList">
+                <span style="background-color: {{ player.color }}"></span>
+                <strong>{{ player.name || 'Unkown' }}</strong>
+            </li>
         </ul>
     </div>
     <div id="waiting-for-socket-overlay" ng-show="!status.socketInitialized">

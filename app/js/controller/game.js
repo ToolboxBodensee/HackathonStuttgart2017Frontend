@@ -45,7 +45,8 @@ angular.module('wriggle').controller(
          */
 
         $scope.game = {
-            myId: null
+            myId:       null,
+            playerList: null
         };
 
         $scope.phaser = {
@@ -255,6 +256,9 @@ angular.module('wriggle').controller(
         $scope.socketPlayerList = function (data) {
             $log.log('GameController: socketPlayerList', data);
 
+            $scope.$apply(function () {
+                $scope.game.playerList = data;
+            });
         };
 
         $scope.socketTick = function (data) {
