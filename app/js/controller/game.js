@@ -1,4 +1,4 @@
-var game, bmd, sprite, lineGraphics, DemoState, colors;
+var game, bmd, sprite, lineGraphics, DemoState, colors, pg;
 
 const events = {
     collision:      'collision',
@@ -14,7 +14,7 @@ const events = {
 
 const backendPath = (
     'wriggle-backend.herokuapp.com'
-    // '10.200.19.196:3000'
+    //'10.200.19.196:3000'
 );
 
 const playerSpeed = 40;
@@ -217,9 +217,28 @@ angular.module('wriggle').controller(
          */
 
         $scope.phaserAddPointForPlayer = function (player, fromX, fromY, toX, toY) {
-            bmd.ctx.moveTo(fromX, fromY);
-            bmd.ctx.lineTo(toX, toY);
-            bmd.ctx.stroke();
+
+            //pg.lineStyle(8, player.color);
+            pg.lineStyle(2, 0xff0000);
+            console.log('Gds', player.color);
+
+            pg.moveTo(
+                fromX - (
+                    screenSize.width / 2
+                ),
+                fromY - (
+                    screenSize.height / 2
+                )
+            );
+            pg.lineTo(
+                toX - (
+                    screenSize.width / 2
+                ),
+                toY - (
+                    screenSize.height / 2
+                )
+            );
+
         };
 
         $scope.phaserCheckForInitialization = function () {
@@ -231,19 +250,17 @@ angular.module('wriggle').controller(
         };
 
         $scope.phaserCreate = function () {
-            bmd = $scope.phaser.instance.add.bitmapData(screenSize.width, screenSize.height);
-            var color = 'white';
+            pg = $scope.phaser.instance.add.graphics(
+                $scope.phaser.instance.world.centerX,
+                $scope.phaser.instance.world.centerY
+            );
 
-            bmd.ctx.beginPath();
-            bmd.ctx.lineWidth = 8;
-            bmd.ctx.strokeStyle = color;
-            bmd.ctx.stroke();
-            sprite = $scope.phaser.instance.add.sprite(0, 0, bmd);
+            pg.lineStyle(2, 0xff0000);
+
         };
 
         $scope.phaserDrawPlayers = function () {
             // $log.log('GameController: phaserDrawPlayers');
-            bmd.clear();
 
             for (const playerListPlayerId in $scope.game.playerList) {
                 const currentPlayer = $scope.game.playerList[playerListPlayerId];
@@ -251,44 +268,33 @@ angular.module('wriggle').controller(
                 if (!currentPlayer.dead) {
                     var lastPosition = null;
 
-                    bmd.ctx.beginPath();
-                    {
-                        // @formatter:off
-                        bmd.ctx.strokeStyle = currentPlayer.color;
-                        bmd.ctx.lineWidth   = 8;
-                        // @formatter:on
+                    for (const i in currentPlayer.points) {
+                        const currentPoint = currentPlayer.points[i];
 
-                        for (const i in currentPlayer.points) {
-                            const currentPoint = currentPlayer.points[i];
-
-                            if (lastPosition) {
-                                $scope.phaserAddPointForPlayer(
-                                    // @formatter:off
-                                    currentPlayer,
-                                    currentPoint.x, currentPoint.y,
-                                    lastPosition.x, lastPosition.y
-                                    // @formatter:on
-                                );
-                            }
-
-                            lastPosition = currentPoint;
-                        }
-
-                        if (currentPlayer.fakePosition && lastPosition && lastPosition.x && lastPosition.y) {
+                        if (lastPosition) {
                             $scope.phaserAddPointForPlayer(
                                 // @formatter:off
                                 currentPlayer,
-                                currentPlayer.fakePosition.x, currentPlayer.fakePosition.y,
-                                lastPosition.x,               lastPosition.y
+                                currentPoint.x, currentPoint.y,
+                                lastPosition.x, lastPosition.y
                                 // @formatter:on
                             );
                         }
+
+                        lastPosition = currentPoint;
                     }
-                    bmd.ctx.closePath();
+
+                    if (currentPlayer.fakePosition && lastPosition && lastPosition.x && lastPosition.y) {
+                        $scope.phaserAddPointForPlayer(
+                            // @formatter:off
+                            currentPlayer,
+                            currentPlayer.fakePosition.x, currentPlayer.fakePosition.y,
+                            lastPosition.x,               lastPosition.y
+                            // @formatter:on
+                        );
+                    }
                 }
             }
-
-            bmd.render();
         };
 
         $scope.phaserFakeNextPosition = function () {
@@ -312,7 +318,6 @@ angular.module('wriggle').controller(
 
         $scope.phaserTick = function () {
             // $log.log('GameController: phaserTick', $scope.phaser.instance.time.elapsed);
-
             $scope.phaser.delta = $scope.phaser.instance.time.elapsed / 1000;
 
             $scope.phaserCheckForInitialization();
@@ -386,14 +391,12 @@ angular.module('wriggle').controller(
                 // $log.log('GameController: socketTick: data.diffs.length', data.diffs);
 
                 for (const diffPlayerId in data.diffs) {
-
                     for (const playerListPlayerId in $scope.game.playerList) {
                         if (playerListPlayerId === diffPlayerId) {
                             // @formatter:off
                             const currentDifference    = data.diffs[diffPlayerId];
                             const currentPlayer        = $scope.game.playerList[playerListPlayerId];
                             currentPlayer.fakePosition = currentDifference.position;
-                            const pointCount           = currentPlayer.points.length;
                             // @formatter:on
 
                             currentPlayer.direction = currentDifference.direction;
