@@ -17,6 +17,8 @@ const backendPath = (
     '10.200.19.196:3000'
 );
 
+const playerSpeed = 40;
+
 const screenSize = {
     height: 768,
     width:  1280
@@ -50,6 +52,7 @@ angular.module('wriggle').controller(
         };
 
         $scope.phaser = {
+            delta:    0,
             instance: null
         };
 
@@ -211,6 +214,12 @@ angular.module('wriggle').controller(
 
                         lastPosition = currentPoint;
                     }
+
+                    if (currentPlayer.fakePosition) {
+                        bmd.ctx.moveTo(currentPlayer.fakePosition.x, currentPlayer.fakePosition.y);
+                        bmd.ctx.lineTo(lastPosition.x, lastPosition.y);
+                        bmd.ctx.stroke();
+                    }
                 }
                 bmd.ctx.closePath();
 
@@ -219,16 +228,40 @@ angular.module('wriggle').controller(
             bmd.render();
         };
 
+        $scope.phaserFakeNextPosition = function () {
+            for (const playerListPlayerId in $scope.game.playerList) {
+                const currentPlayer = $scope.game.playerList[playerListPlayerId];
+                
+                if (currentPlayer.fakePosition) {
+                    // @formatter:off
+                    const fakePosition   = currentPlayer.fakePosition;
+                    const deltaVector    = $scope.vectorFromAngle(currentPlayer.direction);
+                          fakePosition.x = fakePosition.x + (playerSpeed * deltaVector.x * $scope.phaser.delta);
+                          fakePosition.y = fakePosition.y + (playerSpeed * deltaVector.y * $scope.phaser.delta);
+                    // @formatter:on
+                }
+            }
+        };
+
         $scope.phaserPreload = function () {
 
         };
 
         $scope.phaserTick = function () {
-            // $log.log('GameController: phaserTick', data);
+            // $log.log('GameController: phaserTick', $scope.phaser.instance.time.elapsed);
+
+            $scope.phaser.delta = $scope.phaser.instance.time.elapsed / 1000;
 
             $scope.phaserCheckForInitialization();
-
+            $scope.phaserFakeNextPosition();
             $scope.phaserDrawPlayers();
+        };
+
+        $scope.vectorFromAngle = function (rad) {
+            return {
+                x: Math.cos(rad),
+                y: Math.sin(rad)
+            }
         };
 
         /**
@@ -281,11 +314,14 @@ angular.module('wriggle').controller(
                     for (const playerListPlayerId in $scope.game.playerList) {
                         if (playerListPlayerId === diffPlayerId) {
                             // @formatter:off
-                            const currentDifference = data.diffs[diffPlayerId];
-                            const currentPlayer     = $scope.game.playerList[playerListPlayerId];
+                            const currentDifference    = data.diffs[diffPlayerId];
+                            const currentPlayer        = $scope.game.playerList[playerListPlayerId];
+                            currentPlayer.fakePosition = currentDifference.position;
+                            currentPlayer.direction    = currentDifference.direction;
                             // @formatter:on
 
                             currentPlayer.points.push(currentDifference.position);
+
                         }
                     }
                 }
