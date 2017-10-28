@@ -1,5 +1,14 @@
 var game, bmd, sprite, lineGraphics, DemoState, colors;
 
+const events = {
+    displayCreated: 'displayCreated'
+};
+
+const backendPath = (
+    //'wriggle-backend.herokuapp.com'
+    '10.200.19.196:3000'
+);
+
 angular.module('wriggle').controller(
     'GameController', function (
         $log
@@ -82,11 +91,13 @@ angular.module('wriggle').controller(
         };
 
         $scope.openSocket = function () {
-            var socket = io('wriggle-backend.herokuapp.com');
+            var socket = io(backendPath);
             var myId = null;
             socket.on('connect', function () {
                 myId = socket.id;
                 console.log('my id', myId);
+
+                socket.emit(events.displayCreated);
 
                 $scope.$apply(function () {
                     $scope.status.socketInitialized = true;
