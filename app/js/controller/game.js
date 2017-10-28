@@ -314,13 +314,19 @@ angular.module('wriggle').controller(
         $scope.socketJoined = function (data) {
             $log.log('GameController: socketJoined', data);
 
-            // TODO
+            $scope.$apply(function () {
+                $scope.game.playerList[data.id] = data.player;
+            });
         };
 
         $scope.socketPlayerLeft = function (data) {
             $log.log('GameController: socketPlayerLeft', data);
 
-            // TODO
+            if (data && data.id && $scope.game.playerList[data.id]) {
+                $scope.$apply(function () {
+                    delete $scope.game.playerList[data.id];
+                });
+            }
         };
 
         $scope.socketPlayerList = function (data) {
@@ -335,6 +341,8 @@ angular.module('wriggle').controller(
             // $log.log('GameController: socketTick', data);
 
             if (data.diffs) {
+                // $log.log('GameController: socketTick: data.diffs.length', data.diffs);
+
                 for (const diffPlayerId in data.diffs) {
 
                     for (const playerListPlayerId in $scope.game.playerList) {
@@ -346,13 +354,13 @@ angular.module('wriggle').controller(
                             const pointCount           = currentPlayer.points.length;
                             // @formatter:on
 
-                            if (currentPlayer.direction !== currentDifference.direction || pointCount < 2) {
-                                currentPlayer.direction = currentDifference.direction;
+                            currentPlayer.direction = currentDifference.direction;
 
-                                currentPlayer.points.push(currentDifference.position);
-                            } else {
-                                currentPlayer.points[pointCount - 1] = currentDifference.position;
+                            if (!currentPlayer.points) {
+                                currentPlayer.points = [];
                             }
+
+                            currentPlayer.points.push(currentDifference.position);
                         }
                     }
                 }
