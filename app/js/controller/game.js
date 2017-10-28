@@ -13,8 +13,8 @@ const events = {
 };
 
 const backendPath = (
-    // 'wriggle-backend.herokuapp.com'
-    '10.200.19.196:3000'
+    'wriggle-backend.herokuapp.com'
+    // '10.200.19.196:3000'
 );
 
 const playerSpeed = 80;
@@ -198,6 +198,17 @@ angular.module('wriggle').controller(
             } else if (keyCode === 83) {
                 // S
                 $scope.socket.instance.emit(events.startGame);
+            } else if (keyCode === 71) {
+                // G
+
+                $('#introSound')[0].play();
+                setTimeout(function () {
+                    $scope.$apply(function () {
+                        $scope.status.intro = false;
+                        $scope.status.presentation = false;
+                    });
+                }, 4000)
+
             } else if (keyCode === 80) {
                 // P
                 if (!$scope.presentation.timerStarted) {
@@ -231,7 +242,16 @@ angular.module('wriggle').controller(
                     });
                 } else {
                     $scope.$apply(function () {
+                        $scope.status.intro = true;
                         $scope.status.presentation = false;
+
+                        $('#introSound')[0].play();
+                        setTimeout(function () {
+                            $scope.$apply(function () {
+                                $scope.status.intro = false;
+                                $scope.status.presentation = false;
+                            });
+                        }, 4000)
                     })
                 }
             }
@@ -258,7 +278,7 @@ angular.module('wriggle').controller(
         };
 
         $scope.phaserCreate = function () {
-            $scope.phaser.instance.stage.backgroundColor = '#204F7C';
+            $scope.phaser.instance.stage.backgroundColor = '#003559';
 
             bmd = $scope.phaser.instance.add.bitmapData(screenSize.width, screenSize.height);
             var color = 'white';
