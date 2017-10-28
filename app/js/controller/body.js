@@ -36,8 +36,6 @@ angular.module('wriggle').controller(
          */
         $scope.init = function () {
             $log.log('BodyController: init');
-            $('#introSound')[0].play();
-
         };
 
         /**
