@@ -37,8 +37,8 @@ gulp.task('clean', function () {
 
 gulp.task('copyCss', function () {
     return gulp.src([
-        'app/css/*',
         'bower_components/bootstrap/dist/css/bootstrap.min.css',
+        'app/css/*'
     ])
         .pipe(concat('wriggle.css'))
         .pipe(stripCssComments({
