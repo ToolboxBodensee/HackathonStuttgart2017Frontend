@@ -220,7 +220,7 @@ angular.module('wriggle').controller(
 
             //pg.lineStyle(8, player.color);
             pg.lineStyle(2, 0xff0000);
-            console.log('Gds', player.color);
+            //console.log('Gds', player.color);
 
             pg.moveTo(
                 fromX - (
