@@ -9,6 +9,11 @@ const backendPath = (
     '10.200.19.196:3000'
 );
 
+const screenSize = {
+    height: 786,
+    width:  1280
+};
+
 angular.module('wriggle').controller(
     'GameController', function (
         $log
@@ -31,7 +36,15 @@ angular.module('wriggle').controller(
          * #################################################################################################################
          */
 
+        $scope.game = {
+            myId: null
+        };
+
         $scope.phaser = {
+            instance: null
+        };
+
+        $scope.socket = {
             instance: null
         };
 
@@ -52,15 +65,11 @@ angular.module('wriggle').controller(
          * #################################################################################################################
          */
 
-        /**
-         * The controller is initialized.
-         */
         $scope.init = function () {
             $log.log('GameController: init');
 
             $scope.initPhaser();
-
-            $scope.openSocket();
+            $scope.initSocket();
         };
 
         $scope.initPhaser = function () {
@@ -71,49 +80,34 @@ angular.module('wriggle').controller(
                 update:   $scope.phaserTick
             };
 
-            $scope.phaser.instance = new Phaser.Game(1280, 786, Phaser.AUTO, 'game-container');
-            // add the game state to the state manager
+            $scope.phaser.instance = new Phaser.Game(
+                screenSize.width,
+                screenSize.height,
+                Phaser.AUTO,
+                'game-container'
+            );
+
             $scope.phaser.instance.state.add('wriggle', WriggleGame);
-            // and start the game
             $scope.phaser.instance.state.start('wriggle');
-            console.log('Gs');
-
-            /*
-             $scope.phaser = new Phaser.Game(600, 300, Phaser.AUTO, 'phaser-demo');
-
-             console.log('gdsgsdg', $scope.phaser);
-
-             // add the game state to the state manager
-             $scope.phaser.state.add('wriggle', WriggleGame);
-             // and start the game
-             $scope.phaser.state.start('wriggle');*/
-
         };
 
-        $scope.openSocket = function () {
-            var socket = io(backendPath);
+        $scope.initSocket = function () {
+            $scope.socket.instance = io(backendPath);
             var myId = null;
-            socket.on('connect', function () {
-                myId = socket.id;
-                console.log('my id', myId);
 
-                socket.emit(events.displayCreated);
+            $scope.socket.instance.on('connect', $scope.socketConnected);
 
-                $scope.$apply(function () {
-                    $scope.status.socketInitialized = true;
-                });
-            });
-            socket.on('joined', function (data) {
+            $scope.socket.instance.on('joined', function (data) {
                 if (myId === data.id) {
                     console.log('i joined. my postion', data.position);
                     return;
                 }
                 console.log('someone joined', data);
             });
-            socket.on('left', function () {
+            $scope.socket.instance.on('left', function () {
                 console.log('someone left');
             });
-            socket.on('tick', function () {
+            $scope.socket.instance.on('tick', function () {
                 console.log('tick occured');
             });
 
@@ -195,6 +189,24 @@ angular.module('wriggle').controller(
             $scope.phaserCheckForInitialization();
 
             this.drawLine();
+        };
+
+        /**
+         * #################################################################################################################
+         * ### Socket                                                                                                    ###
+         * #################################################################################################################
+         */
+
+        $scope.socketConnected = function () {
+            $scope.game.myId = $scope.socket.instance.id;
+
+            $log.log('GameController: socketConnected', $scope.game.myId);
+
+            $scope.socket.instance.emit(events.displayCreated);
+
+            $scope.$apply(function () {
+                $scope.status.socketInitialized = true;
+            });
         };
 
         /**
