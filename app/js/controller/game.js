@@ -14,11 +14,11 @@ const events = {
 
 const backendPath = (
     'wriggle-backend.herokuapp.com'
-    // '10.200.19.196:3000'
+    //'10.200.19.196:3000'
 );
 
-const playerSpeed = 80;
-const pointLimit = 40;
+const playerSpeed = 66;
+const pointLimit = 22;
 
 const screenSize = {
     height: 768,
