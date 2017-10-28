@@ -88,7 +88,8 @@ gulp.task('copyJs', function () {
             'node_modules/socket.io-client/dist/socket.io.js',
             'bower_components/angular-socket-io/socket.min.js',
             'bower_components/phaser-ce/build/phaser.min.js',
-            'tmp/wriggle.min.js'
+            'tmp/wriggle.min.js',
+            'node_modules/moment/min/moment.min.js'
         ])
         .pipe(concat('wriggle.js'))
         .pipe(gulp.dest('dist'))
