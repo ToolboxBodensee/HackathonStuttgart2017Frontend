@@ -61,6 +61,9 @@ angular.module('wriggle').controller(
         };
 
         $scope.status = {
+            index: 0,
+            intro: false,
+            presentation: true,
             gameInitialized:   false,
             socketInitialized: false
         };
@@ -78,11 +81,18 @@ angular.module('wriggle').controller(
          */
 
         $scope.init = function () {
+
             $log.log('GameController: init');
 
+            $scope.intro();
             $scope.initKeys();
             $scope.initPhaser();
             $scope.initSocket();
+        };
+
+        $scope.intro = function () {
+            $scope.status.intro = true;
+            $('#starSound')[0].play();
         };
 
         $scope.initKeys = function () {
@@ -158,6 +168,19 @@ angular.module('wriggle').controller(
             } else if (keyCode === 83) {
                 // S
                 $scope.socket.instance.emit(events.startGame);
+            } else if (keyCode === 80) {
+                // P
+
+                if($scope.status.index < 3) {
+                    $scope.$apply(function () {
+                        $scope.status.intro = false;
+                        $scope.status.index++;
+                    });
+                    return;
+                }
+                $scope.$apply(function() {
+                    $scope.status.presentation = false;
+                })
             }
         };
 
