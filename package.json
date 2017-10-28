@@ -24,6 +24,8 @@
     "gulp-ng-annotate": "^2.0.0",
     "gulp-replace": "^0.6.1",
     "gulp-strip-css-comments": "^1.2.0",
+    "moment": "^2.19.1",
+    "momentjs": "^2.0.0",
     "run-sequence": "^2.0.0",
     "socket.io": "^2.0.4",
     "vinyl-ftp": "^0.6.0"

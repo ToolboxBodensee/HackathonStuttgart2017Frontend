@@ -64,6 +64,8 @@ angular.module('wriggle').controller(
             index: 0,
             intro: false,
             presentation: true,
+            presentationTime: 5 * 60,
+            timer: moment(this.presentationTime * 1000).format('mm:ss'),
             gameInitialized:   false,
             socketInitialized: false
         };
@@ -73,6 +75,24 @@ angular.module('wriggle').controller(
          * ### Event listeners                                                                                           ###
          * #################################################################################################################
          */
+
+        /**
+        /**
+         * #################################################################################################################
+         * ### Presentation                                                                                              ###
+         * #################################################################################################################
+         */
+
+        $scope.startTimer = function () {
+            if($scope.status.presentationTime > -1) {
+                $scope.$apply(function () {
+                    $scope.status.presentationTime--;
+                    $scope.status.timer = moment($scope.status.presentationTime * 1000).format('mm:ss');
+                })
+
+                setTimeout($scope.startTimer, 1000);
+            }
+        };
 
         /**
          * #################################################################################################################
@@ -171,6 +191,9 @@ angular.module('wriggle').controller(
             } else if (keyCode === 80) {
                 // P
 
+                if($scope.status.index === 0) {
+                    $scope.startTimer();
+                }
                 if($scope.status.index < 3) {
                     $scope.$apply(function () {
                         $scope.status.intro = false;
