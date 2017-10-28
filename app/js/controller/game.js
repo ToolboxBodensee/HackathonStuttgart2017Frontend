@@ -216,6 +216,12 @@ angular.module('wriggle').controller(
          * #################################################################################################################
          */
 
+        $scope.phaserAddPointForPlayer = function (player, fromX, fromY, toX, toY) {
+            bmd.ctx.moveTo(fromX, fromY);
+            bmd.ctx.lineTo(toX, toY);
+            bmd.ctx.stroke();
+        };
+
         $scope.phaserCheckForInitialization = function () {
             if (!$scope.status.gameInitialized) {
                 $scope.$apply(function () {
@@ -256,18 +262,26 @@ angular.module('wriggle').controller(
                             const currentPoint = currentPlayer.points[i];
 
                             if (lastPosition) {
-                                bmd.ctx.moveTo(currentPoint.x, currentPoint.y);
-                                bmd.ctx.lineTo(lastPosition.x, lastPosition.y);
-                                bmd.ctx.stroke();
+                                $scope.phaserAddPointForPlayer(
+                                    // @formatter:off
+                                    currentPlayer,
+                                    currentPoint.x, currentPoint.y,
+                                    lastPosition.x, lastPosition.y
+                                    // @formatter:on
+                                );
                             }
 
                             lastPosition = currentPoint;
                         }
 
                         if (currentPlayer.fakePosition && lastPosition && lastPosition.x && lastPosition.y) {
-                            bmd.ctx.moveTo(currentPlayer.fakePosition.x, currentPlayer.fakePosition.y);
-                            bmd.ctx.lineTo(lastPosition.x, lastPosition.y);
-                            bmd.ctx.stroke();
+                            $scope.phaserAddPointForPlayer(
+                                // @formatter:off
+                                currentPlayer,
+                                currentPlayer.fakePosition.x, currentPlayer.fakePosition.y,
+                                lastPosition.x,               lastPosition.y
+                                // @formatter:on
+                            );
                         }
                     }
                     bmd.ctx.closePath();
