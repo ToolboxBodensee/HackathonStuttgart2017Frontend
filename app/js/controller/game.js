@@ -62,12 +62,12 @@ angular.module('wriggle').controller(
         };
 
         $scope.status = {
-            index: 0,
-            intro: false,
-            presentation: true,
-            presentationTime: 3 * 60,
-            numberOfSlides: $('.slide').length,
-            timer: moment(this.presentationTime * 1000).format('mm:ss'),
+            index:             0,
+            intro:             false,
+            presentation:      true,
+            presentationTime:  3 * 60,
+            numberOfSlides:    $('.slide').length,
+            timer:             moment(this.presentationTime * 1000).format('mm:ss'),
             gameInitialized:   false,
             socketInitialized: false
         };
@@ -79,14 +79,14 @@ angular.module('wriggle').controller(
          */
 
         /**
-        /**
+         /**
          * #################################################################################################################
          * ### Presentation                                                                                              ###
          * #################################################################################################################
          */
 
         $scope.startTimer = function () {
-            if($scope.status.presentationTime > -1) {
+            if ($scope.status.presentationTime > -1) {
                 $scope.presentation.timerStarted = true;
                 $scope.$apply(function () {
                     $scope.status.presentationTime--;
@@ -97,7 +97,7 @@ angular.module('wriggle').controller(
         };
 
         $scope.presentation = {
-            indicator: $scope.status.index.toString() + ' / ' + $scope.status.numberOfSlides.toString(),
+            indicator:    $scope.status.index.toString() + ' / ' + $scope.status.numberOfSlides.toString(),
             timerStarted: false
         };
 
@@ -200,31 +200,37 @@ angular.module('wriggle').controller(
                 $scope.socket.instance.emit(events.startGame);
             } else if (keyCode === 80) {
                 // P
-                if(!$scope.presentation.timerStarted) {
+                if (!$scope.presentation.timerStarted) {
                     $scope.startTimer();
                 }
-                $scope.$apply(function() {
+                $scope.$apply(function () {
                     $scope.status.intro = false;
                     $scope.status.index = 1;
-                    $scope.presentation.indicator = $scope.status.index.toString() + ' / ' + $scope.status.numberOfSlides.toString();
+                    $scope.presentation.indicator = $scope.status.index.toString()
+                        + ' / '
+                        + $scope.status.numberOfSlides.toString();
                 })
             } else if (keyCode === 37) {
                 // Left
-                if($scope.status.index > 1) {
+                if ($scope.status.index > 1) {
                     $scope.$apply(function () {
                         $scope.status.index--
-                        $scope.presentation.indicator = $scope.status.index.toString() + ' / ' + $scope.status.numberOfSlides.toString();
+                        $scope.presentation.indicator = $scope.status.index.toString()
+                            + ' / '
+                            + $scope.status.numberOfSlides.toString();
                     })
                 }
             } else if (keyCode === 39) {
                 // Right
-                if($scope.status.index <= $scope.status.numberOfSlides - 1) {
+                if ($scope.status.index <= $scope.status.numberOfSlides - 1) {
                     $scope.$apply(function () {
                         $scope.status.index++
-                        $scope.presentation.indicator = $scope.status.index.toString() + ' / ' + $scope.status.numberOfSlides.toString();
+                        $scope.presentation.indicator = $scope.status.index.toString()
+                            + ' / '
+                            + $scope.status.numberOfSlides.toString();
                     });
                 } else {
-                    $scope.$apply(function() {
+                    $scope.$apply(function () {
                         $scope.status.presentation = false;
                     })
                 }
@@ -252,6 +258,8 @@ angular.module('wriggle').controller(
         };
 
         $scope.phaserCreate = function () {
+            $scope.phaser.instance.stage.backgroundColor = '#204F7C';
+
             bmd = $scope.phaser.instance.add.bitmapData(screenSize.width, screenSize.height);
             var color = 'white';
 
