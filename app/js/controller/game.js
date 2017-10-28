@@ -22,7 +22,14 @@ angular.module('wriggle').controller(
          * #################################################################################################################
          */
 
-        $scope.phaser = null;
+        $scope.phaser = {
+            instance: null
+        };
+
+        $scope.status = {
+            gameInitialized:   false,
+            socketInitialized: false
+        };
 
         /**
          * #################################################################################################################
@@ -42,53 +49,24 @@ angular.module('wriggle').controller(
         $scope.init = function () {
             $log.log('GameController: init');
 
-            window.setTimeout(function () {
-                $scope.initPhaser();
+            $scope.initPhaser();
 
-                $scope.openSocket();
-            }, 2000);
+            $scope.openSocket();
         };
 
         $scope.initPhaser = function () {
-            function WriggleGame () {
-            }
-
-            WriggleGame.prototype.preload = function () {
-            }
-
-            WriggleGame.prototype.create = function () {
-                bmd = game.add.bitmapData(1280, 300);
-                var color = 'white';
-
-                bmd.ctx.beginPath();
-                bmd.ctx.lineWidth = "4";
-                bmd.ctx.strokeStyle = color;
-                bmd.ctx.stroke();
-                sprite = game.add.sprite(0, 0, bmd);
-            }
-
-            WriggleGame.prototype.drawLine = function () {
-                bmd.clear();
-                bmd.ctx.beginPath();
-                bmd.ctx.beginPath();
-                bmd.ctx.moveTo(10, 10);
-                bmd.ctx.lineTo(game.input.x, game.input.y);
-                bmd.ctx.lineWidth = 4;
-                bmd.ctx.stroke();
-                bmd.ctx.closePath();
-                bmd.render();
-                //bmd.refreshBuffer();
+            const WriggleGame = {
+                preload:  $scope.phaserPreload,
+                create:   $scope.phaserCreate,
+                drawLine: $scope.test,
+                update:   $scope.phaserTick
             };
 
-            WriggleGame.prototype.update = function () {
-                this.drawLine();
-            };
-
-            game = new Phaser.Game(1280, 786, Phaser.AUTO, 'game-container');
+            $scope.phaser.instance = new Phaser.Game(1280, 786, Phaser.AUTO, 'game-container');
             // add the game state to the state manager
-            game.state.add('wriggle', WriggleGame);
+            $scope.phaser.instance.state.add('wriggle', WriggleGame);
             // and start the game
-            game.state.start('wriggle');
+            $scope.phaser.instance.state.start('wriggle');
             console.log('Gs');
 
             /*
@@ -109,6 +87,10 @@ angular.module('wriggle').controller(
             socket.on('connect', function () {
                 myId = socket.id;
                 console.log('my id', myId);
+
+                $scope.$apply(function () {
+                    $scope.status.socketInitialized = true;
+                });
             });
             socket.on('joined', function (data) {
                 if (myId === data.id) {
@@ -124,6 +106,84 @@ angular.module('wriggle').controller(
                 console.log('tick occured');
             });
 
+        };
+
+        /**
+         * #################################################################################################################
+         * ### TODO                                                                                                    ###
+         * ### TODO                                                                                                    ###
+         * ### TODO                                                                                                    ###
+         * ### TODO                                                                                                    ###
+         * ### TODO                                                                                                    ###
+         * ### TODO                                                                                                    ###
+         * ### TODO                                                                                                    ###
+         * ### TODO                                                                                                    ###
+         * ### TODO                                                                                                    ###
+         * ### TODO                                                                                                    ###
+         * #################################################################################################################
+         */
+
+        $scope.test = function () {
+            bmd.clear();
+            bmd.ctx.beginPath();
+            bmd.ctx.beginPath();
+            bmd.ctx.moveTo(10, 10);
+            bmd.ctx.lineTo($scope.phaser.instance.input.x, $scope.phaser.instance.input.y);
+            bmd.ctx.lineWidth = 4;
+            bmd.ctx.stroke();
+            bmd.ctx.closePath();
+            bmd.render();
+            //bmd.refreshBuffer();
+        };
+
+        /**
+         * #################################################################################################################
+         * ### TODO                                                                                                    ###
+         * ### TODO                                                                                                    ###
+         * ### TODO                                                                                                    ###
+         * ### TODO                                                                                                    ###
+         * ### TODO                                                                                                    ###
+         * ### TODO                                                                                                    ###
+         * ### TODO                                                                                                    ###
+         * ### TODO                                                                                                    ###
+         * ### TODO                                                                                                    ###
+         * ### TODO                                                                                                    ###
+         * #################################################################################################################
+         */
+
+        /**
+         * #################################################################################################################
+         * ### Phaser                                                                                                    ###
+         * #################################################################################################################
+         */
+
+        $scope.phaserCheckForInitialization = function () {
+            if (!$scope.status.gameInitialized) {
+                $scope.$apply(function () {
+                    $scope.status.gameInitialized = true;
+                });
+            }
+        };
+
+        $scope.phaserCreate = function () {
+            bmd = $scope.phaser.instance.add.bitmapData(1280, 300);
+            var color = 'white';
+
+            bmd.ctx.beginPath();
+            bmd.ctx.lineWidth = "4";
+            bmd.ctx.strokeStyle = color;
+            bmd.ctx.stroke();
+            sprite = $scope.phaser.instance.add.sprite(0, 0, bmd);
+        };
+
+        $scope.phaserPreload = function () {
+
+        };
+
+        $scope.phaserTick = function () {
+            $scope.phaserCheckForInitialization();
+
+            this.drawLine();
         };
 
         /**
