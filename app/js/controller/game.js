@@ -231,7 +231,7 @@ angular.module('wriggle').controller(
         $scope.phaserFakeNextPosition = function () {
             for (const playerListPlayerId in $scope.game.playerList) {
                 const currentPlayer = $scope.game.playerList[playerListPlayerId];
-                
+
                 if (currentPlayer.fakePosition) {
                     // @formatter:off
                     const fakePosition   = currentPlayer.fakePosition;
@@ -273,6 +273,7 @@ angular.module('wriggle').controller(
         $scope.socketCollision = function (data) {
             $log.log('GameController: socketCollision', data);
 
+            // TODO
         };
 
         $scope.socketConnected = function () {
@@ -290,11 +291,13 @@ angular.module('wriggle').controller(
         $scope.socketJoined = function (data) {
             $log.log('GameController: socketJoined', data);
 
+            // TODO
         };
 
         $scope.socketPlayerLeft = function (data) {
             $log.log('GameController: socketPlayerLeft', data);
 
+            // TODO
         };
 
         $scope.socketPlayerList = function (data) {
@@ -317,17 +320,20 @@ angular.module('wriggle').controller(
                             const currentDifference    = data.diffs[diffPlayerId];
                             const currentPlayer        = $scope.game.playerList[playerListPlayerId];
                             currentPlayer.fakePosition = currentDifference.position;
-                            currentPlayer.direction    = currentDifference.direction;
+                            const pointCount           = currentPlayer.points.length;
                             // @formatter:on
+                            
+                            if (currentPlayer.direction !== currentDifference.direction || pointCount < 2) {
+                                currentPlayer.direction = currentDifference.direction;
 
-                            currentPlayer.points.push(currentDifference.position);
-
+                                currentPlayer.points.push(currentDifference.position);
+                            } else {
+                                currentPlayer.points[pointCount - 1] = currentDifference.position;
+                            }
                         }
                     }
                 }
             }
-
-            // TODO: delta
         };
 
         /**
