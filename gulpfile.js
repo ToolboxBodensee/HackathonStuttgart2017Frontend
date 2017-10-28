@@ -25,6 +25,7 @@ gulp.task('build', function () {
         'copyViews',
         'copyImages',
         'copyCss',
+        'copySounds',
         'generateJs',
         'copyJs'
     );
@@ -64,6 +65,12 @@ gulp.task('copyFonts', function () {
 gulp.task('copyViews', function () {
     return gulp.src('app/views/*.html')
         .pipe(gulp.dest('dist/views'))
+});
+
+
+gulp.task('copySounds', function () {
+    return gulp.src('app/sounds/*')
+        .pipe(gulp.dest('dist/sounds'))
 });
 
 gulp.task('copyImages', function () {
