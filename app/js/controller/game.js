@@ -13,8 +13,8 @@ const events = {
 };
 
 const backendPath = (
-    'wriggle-backend.herokuapp.com'
-    //'10.200.19.196:3000'
+    //'wriggle-backend.herokuapp.com'
+    '10.200.19.196:3000'
 );
 
 const playerSpeed = 66;
@@ -231,7 +231,7 @@ angular.module('wriggle').controller(
                             + $scope.status.numberOfSlides.toString();
                     })
                 }
-            } else if (keyCode === 39) {
+            } else if (keyCode === 39 || keyCode == 32) {
                 // Right
                 if ($scope.status.index <= $scope.status.numberOfSlides - 1) {
                     $scope.$apply(function () {

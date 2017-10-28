@@ -11,7 +11,7 @@
         <ul>
             <li ng-repeat="player in game.playerList" ng-show="!player.dead">
                 <span style="background-color: {{ player.color }}"></span>
-                <strong>{{ player.name || 'Unkown' }}</strong>
+                <strong>{{ player.name || 'Unknown' }}</strong>
             </li>
         </ul>
     </div>
@@ -20,32 +20,46 @@
         waiting for socket
     </div>
     <div id="waiting-for-phaser-overlay" ng-show="!status.gameInitialized">
-        TODO: waiting for game
+        waiting for game
     </div>
 
     <div id="presentation" ng-show="status.presentation">
         <div id="indicator">{{presentation.indicator}}</div>
         <div ng-show="status.index === 1" class="slide">
             <h1>what's the issue?</h1>
-            <h2>people dont meet irl</h2>
-            <h2>people dont move enough</h2>
+            <h2>people play online at home</h2>
+            <h2>people don't meet irl</h2>
+            <h2>people don't move enough</h2>
             <h2>missing social interaction</h2>
         </div>
         <div ng-show="status.index === 2" class="slide">
             <h1>solving these problems</h1>
-            <h2>bla</h2>
-            <h2>bla</h2>
-            <h2>bla</h2>
+            <h2>player have to be in the same room</h2>
+            <h2>move the controller instead of pressing buttons</h2>
+            <h2>competition against each other</h2>
         </div>
         <div ng-show="status.index === 3" class="slide">
             <h1>our stack</h1>
-            <h2><div class="icon">🕹</div> nodejs-backend as gameserver</h2>
-            <h2><div class="icon">⌚</div> android-app for wristband</h2>
-            <h2><div class="icon">📱</div> responsive web-app</h2>
-            <h2><div class="icon">💻</div> angular-web-app</h2>
+            <h2>
+                <div class="icon">🕹</div>
+                node.js-backend as game server
+            </h2>
+            <h2>
+                <div class="icon">⌚</div>
+                android-app for wristband 🎮
+            </h2>
+            <h2>
+                <div class="icon">📱</div>
+                responsive web-app as alternative 🎮
+            </h2>
+            <h2>
+                <div class="icon">💻</div>
+                angular-web-app
+            </h2>
         </div>
         <div ng-show="status.index === 4" class="slide">
-            <h1>infrastructure diagram</h1><br>
+            <h1>infrastructure diagram</h1>
+            <br>
             <figure>
                 <img src="images/infrastructure.png" width="1200" alt="">
             </figure>
@@ -53,9 +67,14 @@
         <div ng-show="status.index === 5" class="slide">
             <div class="image-slide">
                 <div class="text">
-                    <h1>nodejs-backend</h1>
-                    <h2><div class="icon ">🕹</div> gameserver</h2>
+                    <h1>node.js-backend</h1>
+                    <h2>
+                        <div class="icon ">🕹</div>
+                        game server
+                    </h2>
                     <h2>handling all game-related stuff</h2>
+                    <h2>hosted on heroku</h2>
+                    <h2>feature complete</h2>
                 </div>
                 <figure>
                     <img src="images/iphone_app.png" width="300" alt="">
@@ -66,7 +85,19 @@
             <div class="image-slide">
                 <div class="text">
                     <h1>android app</h1>
-                    <h2><div class="icon">👊</div> playing with gesture wrist band</h2>
+                    <h2>
+                        <div class="icon">👊</div>
+                        playing with gesture wrist band
+                    </h2>
+                    <h2>
+                        raw data wristband implementation
+                    </h2>
+                    <h2>
+                        led feedback
+                    </h2>
+                    <h2>
+                        feature complete
+                    </h2>
                 </div>
                 <figure>
                     <img src="images/iphone_app.png" width="300" alt="">
@@ -76,8 +107,20 @@
         <div ng-show="status.index === 7" class="slide">
             <div class="image-slide">
                 <div class="text">
-                    <h1>reponsive web-app</h1>
-                    <h2><div class="icon wrist">📱</div> playing without wrist-band</h2>
+                    <h1>responsive web-app</h1>
+                    <h2>
+                        <div class="icon wrist">📱</div>
+                        playing without wrist-band
+                    </h2>
+                    <h2>
+                        runs on all modern smartphones
+                    </h2>
+                    <h2>
+                        hosted on heroku
+                    </h2>
+                    <h2>
+                        feature complete
+                    </h2>
                 </div>
                 <figure>
                     <img src="images/mobile_web_app.jpeg" width="300" alt="">
@@ -85,10 +128,42 @@
             </div>
         </div>
         <div ng-show="status.index === 8" class="slide">
-            <h1>future goals?</h1>
+            <h1>future goals: more controllers</h1>
+            <h2>
+                <div class="icon">🖥</div>
+                open api for every kind of controller
+            </h2>
+            <h2>
+                <div class="icon">🕺</div>
+                like dance mats
+            </h2>
+            <h2>
+                <div class="icon">👓</div>
+                motion enabled glasses
+            </h2>
+            <h2>
+                <div class="icon">🔮</div>
+                or whatever you imagine
+            </h2>
         </div>
         <div ng-show="status.index === 9" class="slide">
-            <h1>future goals?</h1>
+            <h1>monetization</h1>
+            <h2>
+                <div class="icon">💰</div>
+                paid fitness programs
+            </h2>
+            <h2>
+                <div class="icon">💸</div>
+                big data e.g. for insurance
+            </h2>
+            <h2>
+                <div class="icon">🤑</div>
+                affiliate as controller reseller
+            </h2>
+            <h2>
+                <div class="icon">💵</div>
+                comparable projects produce 100-500k$/month
+            </h2>
         </div>
     </div>
 
@@ -101,5 +176,7 @@
         </figure>
     </div>
 
-    <div ng-show="!status.intro" id="timer">Timer: <span id="counter">{{status.timer}}</span></div>
+    <div ng-show="!status.intro && status.timer" id="timer">Timer:
+        <span id="counter">{{status.timer}}</span>
+    </div>
 </div>
