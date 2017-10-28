@@ -4,7 +4,7 @@
     </div>
     <div id="player-list">
         <ul>
-            <li ng-repeat="player in game.playerList">
+            <li ng-repeat="player in game.playerList" ng-show="!player.dead">
                 <span style="background-color: {{ player.color }}"></span>
                 <strong>{{ player.name || 'Unkown' }}</strong>
             </li>

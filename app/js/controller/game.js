@@ -139,7 +139,7 @@ angular.module('wriggle').controller(
                 currentPlayer.points = [];
                 // @formatter:on
             }
-        }
+        };
 
         /**
          * #################################################################################################################
@@ -191,38 +191,38 @@ angular.module('wriggle').controller(
             bmd.clear();
 
             for (const playerListPlayerId in $scope.game.playerList) {
-                // @formatter:off
                 const currentPlayer = $scope.game.playerList[playerListPlayerId];
-                var lastPosition    = null;
-                // @formatter:on
 
-                bmd.ctx.beginPath();
-                {
-                    // @formatter:off
-                    bmd.ctx.strokeStyle = currentPlayer.color;
-                    bmd.ctx.lineWidth   = 2;
-                    // @formatter:on
+                if (!currentPlayer.dead) {
+                    var lastPosition = null;
 
-                    for (const i in currentPlayer.points) {
-                        const currentPoint = currentPlayer.points[i];
+                    bmd.ctx.beginPath();
+                    {
+                        // @formatter:off
+                        bmd.ctx.strokeStyle = currentPlayer.color;
+                        bmd.ctx.lineWidth   = 2;
+                        // @formatter:on
 
-                        if (lastPosition) {
-                            bmd.ctx.moveTo(currentPoint.x, currentPoint.y);
+                        for (const i in currentPlayer.points) {
+                            const currentPoint = currentPlayer.points[i];
+
+                            if (lastPosition) {
+                                bmd.ctx.moveTo(currentPoint.x, currentPoint.y);
+                                bmd.ctx.lineTo(lastPosition.x, lastPosition.y);
+                                bmd.ctx.stroke();
+                            }
+
+                            lastPosition = currentPoint;
+                        }
+
+                        if (currentPlayer.fakePosition) {
+                            bmd.ctx.moveTo(currentPlayer.fakePosition.x, currentPlayer.fakePosition.y);
                             bmd.ctx.lineTo(lastPosition.x, lastPosition.y);
                             bmd.ctx.stroke();
                         }
-
-                        lastPosition = currentPoint;
                     }
-
-                    if (currentPlayer.fakePosition) {
-                        bmd.ctx.moveTo(currentPlayer.fakePosition.x, currentPlayer.fakePosition.y);
-                        bmd.ctx.lineTo(lastPosition.x, lastPosition.y);
-                        bmd.ctx.stroke();
-                    }
+                    bmd.ctx.closePath();
                 }
-                bmd.ctx.closePath();
-
             }
 
             bmd.render();
@@ -322,7 +322,7 @@ angular.module('wriggle').controller(
                             currentPlayer.fakePosition = currentDifference.position;
                             const pointCount           = currentPlayer.points.length;
                             // @formatter:on
-                            
+
                             if (currentPlayer.direction !== currentDifference.direction || pointCount < 2) {
                                 currentPlayer.direction = currentDifference.direction;
 
