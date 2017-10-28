@@ -318,6 +318,8 @@ angular.module('wriggle').controller(
             // $log.log('GameController: socketTick', data);
 
             if (data.diffs) {
+                // $log.log('GameController: socketTick: data.diffs.length', data.diffs);
+
                 for (const diffPlayerId in data.diffs) {
 
                     for (const playerListPlayerId in $scope.game.playerList) {
@@ -329,17 +331,13 @@ angular.module('wriggle').controller(
                             const pointCount           = currentPlayer.points.length;
                             // @formatter:on
 
-                            if (currentPlayer.direction !== currentDifference.direction || pointCount < 2) {
-                                currentPlayer.direction = currentDifference.direction;
+                            currentPlayer.direction = currentDifference.direction;
 
-                                if (!currentPlayer.points) {
-                                    currentPlayer.points = [];
-                                }
-
-                                currentPlayer.points.push(currentDifference.position);
-                            } else {
-                                currentPlayer.points[pointCount - 1] = currentDifference.position;
+                            if (!currentPlayer.points) {
+                                currentPlayer.points = [];
                             }
+
+                            currentPlayer.points.push(currentDifference.position);
                         }
                     }
                 }
