@@ -14,11 +14,11 @@ const events = {
 
 const backendPath = (
     'wriggle-backend.herokuapp.com'
-    // '10.200.19.196:3000'
+    //'10.200.19.196:3000'
 );
 
-const playerSpeed = 80;
-const pointLimit = 40;
+const playerSpeed = 66;
+const pointLimit = 22;
 
 const screenSize = {
     height: 768,
@@ -263,10 +263,15 @@ angular.module('wriggle').controller(
          * #################################################################################################################
          */
 
-        $scope.phaserAddPointForPlayer = function (player, fromX, fromY, toX, toY) {
+        $scope.phaserAddPointForPlayer = function (player, fromX, fromY, toX, toY, fake) {
             bmd.ctx.moveTo(fromX, fromY);
             bmd.ctx.lineTo(toX, toY);
             bmd.ctx.stroke();
+
+            if (!fake) {
+                bmd.circle(toX, toY, 2, player.color);
+                bmd.ctx.fill();
+            }
         };
 
         $scope.phaserCheckForInitialization = function () {
@@ -281,12 +286,7 @@ angular.module('wriggle').controller(
             $scope.phaser.instance.stage.backgroundColor = '#003559';
 
             bmd = $scope.phaser.instance.add.bitmapData(screenSize.width, screenSize.height);
-            var color = 'white';
 
-            bmd.ctx.beginPath();
-            bmd.ctx.lineWidth = 8;
-            bmd.ctx.strokeStyle = color;
-            bmd.ctx.stroke();
             sprite = $scope.phaser.instance.add.sprite(0, 0, bmd);
         };
 
@@ -328,7 +328,8 @@ angular.module('wriggle').controller(
                                 // @formatter:off
                                 currentPlayer,
                                 currentPlayer.fakePosition.x, currentPlayer.fakePosition.y,
-                                lastPosition.x,               lastPosition.y
+                                lastPosition.x,               lastPosition.y,
+                                true
                                 // @formatter:on
                             );
                         }
