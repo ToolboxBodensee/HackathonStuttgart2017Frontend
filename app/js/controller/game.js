@@ -86,17 +86,19 @@ angular.module('wriggle').controller(
 
         $scope.startTimer = function () {
             if($scope.status.presentationTime > -1) {
+                $scope.presentation.timerStarted = true;
                 $scope.$apply(function () {
                     $scope.status.presentationTime--;
                     $scope.status.timer = moment($scope.status.presentationTime * 1000).format('mm:ss');
-                })
+                });
                 setTimeout($scope.startTimer, 1000);
             }
         };
 
         $scope.presentation = {
-            indicator: $scope.status.index.toString() + ' / ' + $scope.status.numberOfSlides.toString()
-        }
+            indicator: $scope.status.index.toString() + ' / ' + $scope.status.numberOfSlides.toString(),
+            timerStarted: false
+        };
 
         /**
          * #################################################################################################################
@@ -197,7 +199,9 @@ angular.module('wriggle').controller(
                 $scope.socket.instance.emit(events.startGame);
             } else if (keyCode === 80) {
                 // P
-                $scope.startTimer();
+                if(!$scope.presentation.timerStarted) {
+                    $scope.startTimer();
+                }
                 $scope.$apply(function() {
                     $scope.status.intro = false;
                     $scope.status.index = 1;
