@@ -180,7 +180,7 @@ angular.module('wriggle').controller(
             var color = 'white';
 
             bmd.ctx.beginPath();
-            bmd.ctx.lineWidth = "2";
+            bmd.ctx.lineWidth = 8;
             bmd.ctx.strokeStyle = color;
             bmd.ctx.stroke();
             sprite = $scope.phaser.instance.add.sprite(0, 0, bmd);
@@ -200,7 +200,7 @@ angular.module('wriggle').controller(
                     {
                         // @formatter:off
                         bmd.ctx.strokeStyle = currentPlayer.color;
-                        bmd.ctx.lineWidth   = 2;
+                        bmd.ctx.lineWidth   = 8;
                         // @formatter:on
 
                         for (const i in currentPlayer.points) {
