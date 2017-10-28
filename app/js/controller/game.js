@@ -17,7 +17,8 @@ const backendPath = (
     // '10.200.19.196:3000'
 );
 
-const playerSpeed = 40;
+const playerSpeed = 80;
+const pointLimit = 40;
 
 const screenSize = {
     height: 768,
@@ -303,8 +304,6 @@ angular.module('wriggle').controller(
                     bmd.ctx.closePath();
                 }
             }
-
-            bmd.render();
         };
 
         $scope.phaserFakeNextPosition = function () {
@@ -419,6 +418,10 @@ angular.module('wriggle').controller(
                             }
 
                             currentPlayer.points.push(currentDifference.position);
+
+                            if (currentPlayer.points.length > pointLimit) {
+                                currentPlayer.points.splice(0, 1);
+                            }
                         }
                     }
                 }
