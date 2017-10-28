@@ -36,9 +36,7 @@
     "momentjs": "^2.0.0",
     "run-sequence": "^2.0.0",
     "socket.io": "^2.0.4",
-    "vinyl-ftp": "^0.6.0"
-  },
-  "devDependencies": {
+    "vinyl-ftp": "^0.6.0",
     "gulp-watch": "^4.3.11"
   }
 }
