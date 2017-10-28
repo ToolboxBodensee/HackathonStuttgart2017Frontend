@@ -123,45 +123,20 @@ angular.module('wriggle').controller(
 
         /**
          * #################################################################################################################
-         * ### TODO                                                                                                    ###
-         * ### TODO                                                                                                    ###
-         * ### TODO                                                                                                    ###
-         * ### TODO                                                                                                    ###
-         * ### TODO                                                                                                    ###
-         * ### TODO                                                                                                    ###
-         * ### TODO                                                                                                    ###
-         * ### TODO                                                                                                    ###
-         * ### TODO                                                                                                    ###
-         * ### TODO                                                                                                    ###
+         * ### Game                                                                                                      ###
          * #################################################################################################################
          */
 
-        $scope.test = function () {
-            bmd.clear();
-            bmd.ctx.beginPath();
-            bmd.ctx.moveTo(10, 10);
-            bmd.ctx.lineTo($scope.phaser.instance.input.x, $scope.phaser.instance.input.y);
-            bmd.ctx.lineWidth = 4;
-            bmd.ctx.stroke();
-            bmd.ctx.closePath();
-            bmd.render();
-            //bmd.refreshBuffer();
-        };
+        $scope.gameStop = function () {
+            $scope.socket.instance.emit(events.stopGame);
 
-        /**
-         * #################################################################################################################
-         * ### TODO                                                                                                    ###
-         * ### TODO                                                                                                    ###
-         * ### TODO                                                                                                    ###
-         * ### TODO                                                                                                    ###
-         * ### TODO                                                                                                    ###
-         * ### TODO                                                                                                    ###
-         * ### TODO                                                                                                    ###
-         * ### TODO                                                                                                    ###
-         * ### TODO                                                                                                    ###
-         * ### TODO                                                                                                    ###
-         * #################################################################################################################
-         */
+            for (const playerListPlayerId in $scope.game.playerList) {
+                // @formatter:off
+                const currentPlayer  = $scope.game.playerList[playerListPlayerId];
+                currentPlayer.points = [];
+                // @formatter:on
+            }
+        }
 
         /**
          * #################################################################################################################
@@ -176,7 +151,7 @@ angular.module('wriggle').controller(
 
             if (keyCode === 69) {
                 // E
-                $scope.socket.instance.emit(events.stopGame);
+                $scope.gameStop();
             } else if (keyCode === 83) {
                 // S
                 $scope.socket.instance.emit(events.startGame);
@@ -198,14 +173,47 @@ angular.module('wriggle').controller(
         };
 
         $scope.phaserCreate = function () {
-            bmd = $scope.phaser.instance.add.bitmapData(1280, 300);
+            bmd = $scope.phaser.instance.add.bitmapData(screenSize.width, screenSize.height);
             var color = 'white';
 
             bmd.ctx.beginPath();
-            bmd.ctx.lineWidth = "4";
+            bmd.ctx.lineWidth = "2";
             bmd.ctx.strokeStyle = color;
             bmd.ctx.stroke();
             sprite = $scope.phaser.instance.add.sprite(0, 0, bmd);
+        };
+
+        $scope.phaserDrawPlayers = function () {
+            // $log.log('GameController: phaserDrawPlayers');
+            bmd.clear();
+
+            for (const playerListPlayerId in $scope.game.playerList) {
+                // @formatter:off
+                const currentPlayer = $scope.game.playerList[playerListPlayerId];
+                var lastPosition    = null;
+                // @formatter:on
+
+                bmd.ctx.beginPath();
+                {
+                    for (const i in currentPlayer.points) {
+                        const currentPoint = currentPlayer.points[i];
+
+                        if (lastPosition) {
+                            //bmd.ctx.strokeStyle // TODO: color
+                            bmd.ctx.moveTo(currentPoint.x, currentPoint.y);
+                            bmd.ctx.lineTo(lastPosition.x, lastPosition.y);
+                            bmd.ctx.lineWidth = 4;
+                            bmd.ctx.stroke();
+                        }
+
+                        lastPosition = currentPoint;
+                    }
+                }
+                bmd.ctx.closePath();
+
+            }
+
+            bmd.render();
         };
 
         $scope.phaserPreload = function () {
@@ -213,9 +221,11 @@ angular.module('wriggle').controller(
         };
 
         $scope.phaserTick = function () {
+            // $log.log('GameController: phaserTick', data);
+
             $scope.phaserCheckForInitialization();
 
-            $scope.test();
+            $scope.phaserDrawPlayers();
         };
 
         /**
@@ -260,7 +270,7 @@ angular.module('wriggle').controller(
         };
 
         $scope.socketTick = function (data) {
-            $log.log('GameController: socketTick', data);
+            // $log.log('GameController: socketTick', data);
 
             if (data.diffs) {
                 for (const diffPlayerId in data.diffs) {
@@ -276,39 +286,9 @@ angular.module('wriggle').controller(
                         }
                     }
                 }
-
             }
 
             // TODO: delta
-
-            /*
-             {lastTick: 1509178819360, delta: 1.003, diffs: {…}}
-             delta
-             :
-             1.003
-             diffs
-             :
-             S77xhJZdBWuT-kTBAAAC
-             :
-             direction
-             :
-             268.8979875209985
-             position
-             :
-             {x: -52.641095069504004, y: 178.50052790549398}
-             __proto__
-             :
-             Object
-             e2-bF00tSshg28qsAAAB
-             :
-             {position: {…}, direction: 136.58240236391472}
-             __proto__
-             :
-             Object
-             lastTick
-             :
-             1509178
-             */
         };
 
         /**
