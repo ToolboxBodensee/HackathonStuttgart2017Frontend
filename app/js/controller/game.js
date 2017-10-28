@@ -6,6 +6,7 @@ const events = {
     displayCreated: 'displayCreated',
     joined:         'joined',
     left:           'left',
+    playerList:     'playerList',
     tick:           'tick'
 };
 
@@ -15,7 +16,7 @@ const backendPath = (
 );
 
 const screenSize = {
-    height: 786,
+    height: 768,
     width:  1280
 };
 
@@ -104,11 +105,12 @@ angular.module('wriggle').controller(
             $scope.socket.instance = io(backendPath, { query: 'type=display' });
 
             // @formatter:off
-            $scope.socket.instance.on(events.collision, $scope.socketCollision);
-            $scope.socket.instance.on(events.connect,   $scope.socketConnected);
-            $scope.socket.instance.on(events.joined,    $scope.socketJoined);
-            $scope.socket.instance.on(events.left,      $scope.socketPlayerLeft);
-            $scope.socket.instance.on(events.tick,      $scope.socketTick);
+            $scope.socket.instance.on(events.collision,  $scope.socketCollision);
+            $scope.socket.instance.on(events.connect,    $scope.socketConnected);
+            $scope.socket.instance.on(events.joined,     $scope.socketJoined);
+            $scope.socket.instance.on(events.left,       $scope.socketPlayerLeft);
+            $scope.socket.instance.on(events.playerList, $scope.socketPlayerList);
+            $scope.socket.instance.on(events.tick,       $scope.socketTick);
             // @formatter:on
         };
 
@@ -220,6 +222,11 @@ angular.module('wriggle').controller(
 
         $scope.socketPlayerLeft = function (data) {
             $log.log('GameController: socketPlayerLeft', data);
+
+        };
+
+        $scope.socketPlayerList = function (data) {
+            $log.log('GameController: socketPlayerList', data);
 
         };
 
