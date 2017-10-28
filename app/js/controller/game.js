@@ -90,10 +90,9 @@ angular.module('wriggle').controller(
             $log.log('GameController: initPhaser');
 
             const WriggleGame = {
-                preload:  $scope.phaserPreload,
-                create:   $scope.phaserCreate,
-                drawLine: $scope.test,
-                update:   $scope.phaserTick
+                preload: $scope.phaserPreload,
+                create:  $scope.phaserCreate,
+                update:  $scope.phaserTick
             };
 
             $scope.phaser.instance = new Phaser.Game(
@@ -139,7 +138,6 @@ angular.module('wriggle').controller(
 
         $scope.test = function () {
             bmd.clear();
-            bmd.ctx.beginPath();
             bmd.ctx.beginPath();
             bmd.ctx.moveTo(10, 10);
             bmd.ctx.lineTo($scope.phaser.instance.input.x, $scope.phaser.instance.input.y);
@@ -217,7 +215,7 @@ angular.module('wriggle').controller(
         $scope.phaserTick = function () {
             $scope.phaserCheckForInitialization();
 
-            this.drawLine();
+            $scope.test();
         };
 
         /**
@@ -264,6 +262,53 @@ angular.module('wriggle').controller(
         $scope.socketTick = function (data) {
             $log.log('GameController: socketTick', data);
 
+            if (data.diffs) {
+                for (const diffPlayerId in data.diffs) {
+
+                    for (const playerListPlayerId in $scope.game.playerList) {
+                        if (playerListPlayerId === diffPlayerId) {
+                            // @formatter:off
+                            const currentDifference = data.diffs[diffPlayerId];
+                            const currentPlayer     = $scope.game.playerList[playerListPlayerId];
+                            // @formatter:on
+
+                            currentPlayer.points.push(currentDifference.position);
+                        }
+                    }
+                }
+
+            }
+
+            // TODO: delta
+
+            /*
+             {lastTick: 1509178819360, delta: 1.003, diffs: {…}}
+             delta
+             :
+             1.003
+             diffs
+             :
+             S77xhJZdBWuT-kTBAAAC
+             :
+             direction
+             :
+             268.8979875209985
+             position
+             :
+             {x: -52.641095069504004, y: 178.50052790549398}
+             __proto__
+             :
+             Object
+             e2-bF00tSshg28qsAAAB
+             :
+             {position: {…}, direction: 136.58240236391472}
+             __proto__
+             :
+             Object
+             lastTick
+             :
+             1509178
+             */
         };
 
         /**
