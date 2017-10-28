@@ -1,4 +1,9 @@
 <div ng-controller="GameController">
+    <div id="game-logo" ng-show="!status.presentation">
+        <picture>
+            <img src="images/logo.svg" width="150" alt="">
+        </picture>
+    </div>
     <div id="game-container">
 
     </div>
@@ -40,42 +45,49 @@
             <h2><div class="icon">💻</div> angular-web-app</h2>
         </div>
         <div ng-show="status.index === 4" class="slide">
-            <div class="image-slide">
-                <figure>
-                    <img src="images/iphone_app.png" width="300" alt="">
-                </figure>
-                <div class="text">
-                    <h1>android app</h1>
-                    <h2><div class="icon wrist">👊</div> playing with gesture wrist band</h2>
-                </div>
-            </div>
+            <h1>infrastructure diagram</h1><br>
+            <figure>
+                <img src="images/infrastructure.png" width="1200" alt="">
+            </figure>
         </div>
         <div ng-show="status.index === 5" class="slide">
             <div class="image-slide">
+                <div class="text">
+                    <h1>nodejs-backend</h1>
+                    <h2><div class="icon ">🕹</div> gameserver</h2>
+                    <h2>handling all game-related stuff</h2>
+                </div>
                 <figure>
                     <img src="images/iphone_app.png" width="300" alt="">
                 </figure>
-                <div class="text">
-                    <h1>android app</h1>
-                    <h2><div class="icon wrist">👊</div> playing with gesture wrist band</h2>
-                </div>
             </div>
         </div>
         <div ng-show="status.index === 6" class="slide">
             <div class="image-slide">
+                <div class="text">
+                    <h1>android app</h1>
+                    <h2><div class="icon">👊</div> playing with gesture wrist band</h2>
+                </div>
                 <figure>
-                    <img src="images/mobile_web_app.jpeg" width="300" alt="">
+                    <img src="images/iphone_app.png" width="300" alt="">
                 </figure>
+            </div>
+        </div>
+        <div ng-show="status.index === 7" class="slide">
+            <div class="image-slide">
                 <div class="text">
                     <h1>reponsive web-app</h1>
                     <h2><div class="icon wrist">📱</div> playing without wrist-band</h2>
                 </div>
+                <figure>
+                    <img src="images/mobile_web_app.jpeg" width="300" alt="">
+                </figure>
             </div>
         </div>
-        <div ng-show="status.index === 7" class="slide">
+        <div ng-show="status.index === 8" class="slide">
             <h1>future goals?</h1>
         </div>
-        <div ng-show="status.index === 8" class="slide">
+        <div ng-show="status.index === 9" class="slide">
             <h1>future goals?</h1>
         </div>
     </div>

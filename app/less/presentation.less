@@ -37,9 +37,13 @@
       flex-direction:row;
 
       figure {
-        margin-right: 150px;
+        margin-left: 150px;
+        margin-top: 150px;
         position: relative;
         z-index: 187;
+        -ms-transform: rotate(2deg); /* IE 9 */
+        -webkit-transform: rotate(2deg); /* Chrome, Safari, Opera */
+        transform: rotate(2deg);
         &:after {
           z-index: -1;
           content: "";
@@ -52,9 +56,6 @@
           top: -5%;
           width: 110%;
           height: 110%;
-          -ms-transform: rotate(2deg); /* IE 9 */
-          -webkit-transform: rotate(2deg); /* Chrome, Safari, Opera */
-          transform: rotate(2deg);
           -webkit-box-shadow: 10px 10px 0px 10px rgba(0,0,0,0.75);
           -moz-box-shadow: 10px 10px 0px 10px rgba(0,0,0,0.75);
           box-shadow: 10px 10px 0px 10px rgba(0,0,0,0.75);
