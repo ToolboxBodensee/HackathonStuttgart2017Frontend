@@ -17,7 +17,8 @@ const backendPath = (
     '10.200.19.196:3000'
 );
 
-const playerSpeed = 40;
+const playerSpeed = 80;
+const pointLimit = 40;
 
 const screenSize = {
     height: 768,
@@ -61,12 +62,12 @@ angular.module('wriggle').controller(
         };
 
         $scope.status = {
-            index: 0,
-            intro: false,
-            presentation: true,
-            presentationTime: 3 * 60,
-            numberOfSlides: $('.slide').length,
-            timer: moment(this.presentationTime * 1000).format('mm:ss'),
+            index:             0,
+            intro:             false,
+            presentation:      true,
+            presentationTime:  3 * 60,
+            numberOfSlides:    $('.slide').length,
+            timer:             moment(this.presentationTime * 1000).format('mm:ss'),
             gameInitialized:   false,
             socketInitialized: false
         };
@@ -78,14 +79,14 @@ angular.module('wriggle').controller(
          */
 
         /**
-        /**
+         /**
          * #################################################################################################################
          * ### Presentation                                                                                              ###
          * #################################################################################################################
          */
 
         $scope.startTimer = function () {
-            if($scope.status.presentationTime > -1) {
+            if ($scope.status.presentationTime > -1) {
                 $scope.presentation.timerStarted = true;
                 $scope.$apply(function () {
                     $scope.status.presentationTime--;
@@ -96,7 +97,7 @@ angular.module('wriggle').controller(
         };
 
         $scope.presentation = {
-            indicator: $scope.status.index.toString() + ' / ' + $scope.status.numberOfSlides.toString(),
+            indicator:    $scope.status.index.toString() + ' / ' + $scope.status.numberOfSlides.toString(),
             timerStarted: false
         };
 
@@ -199,31 +200,37 @@ angular.module('wriggle').controller(
                 $scope.socket.instance.emit(events.startGame);
             } else if (keyCode === 80) {
                 // P
-                if(!$scope.presentation.timerStarted) {
+                if (!$scope.presentation.timerStarted) {
                     $scope.startTimer();
                 }
-                $scope.$apply(function() {
+                $scope.$apply(function () {
                     $scope.status.intro = false;
                     $scope.status.index = 1;
-                    $scope.presentation.indicator = $scope.status.index.toString() + ' / ' + $scope.status.numberOfSlides.toString();
+                    $scope.presentation.indicator = $scope.status.index.toString()
+                        + ' / '
+                        + $scope.status.numberOfSlides.toString();
                 })
             } else if (keyCode === 37) {
                 // Left
-                if($scope.status.index > 1) {
+                if ($scope.status.index > 1) {
                     $scope.$apply(function () {
                         $scope.status.index--
-                        $scope.presentation.indicator = $scope.status.index.toString() + ' / ' + $scope.status.numberOfSlides.toString();
+                        $scope.presentation.indicator = $scope.status.index.toString()
+                            + ' / '
+                            + $scope.status.numberOfSlides.toString();
                     })
                 }
             } else if (keyCode === 39) {
                 // Right
-                if($scope.status.index <= $scope.status.numberOfSlides - 1) {
+                if ($scope.status.index <= $scope.status.numberOfSlides - 1) {
                     $scope.$apply(function () {
                         $scope.status.index++
-                        $scope.presentation.indicator = $scope.status.index.toString() + ' / ' + $scope.status.numberOfSlides.toString();
+                        $scope.presentation.indicator = $scope.status.index.toString()
+                            + ' / '
+                            + $scope.status.numberOfSlides.toString();
                     });
                 } else {
-                    $scope.$apply(function() {
+                    $scope.$apply(function () {
                         $scope.status.presentation = false;
                     })
                 }
@@ -236,6 +243,12 @@ angular.module('wriggle').controller(
          * #################################################################################################################
          */
 
+        $scope.phaserAddPointForPlayer = function (player, fromX, fromY, toX, toY) {
+            bmd.ctx.moveTo(fromX, fromY);
+            bmd.ctx.lineTo(toX, toY);
+            bmd.ctx.stroke();
+        };
+
         $scope.phaserCheckForInitialization = function () {
             if (!$scope.status.gameInitialized) {
                 $scope.$apply(function () {
@@ -245,6 +258,8 @@ angular.module('wriggle').controller(
         };
 
         $scope.phaserCreate = function () {
+            $scope.phaser.instance.stage.backgroundColor = '#204F7C';
+
             bmd = $scope.phaser.instance.add.bitmapData(screenSize.width, screenSize.height);
             var color = 'white';
 
@@ -276,25 +291,31 @@ angular.module('wriggle').controller(
                             const currentPoint = currentPlayer.points[i];
 
                             if (lastPosition) {
-                                bmd.ctx.moveTo(currentPoint.x, currentPoint.y);
-                                bmd.ctx.lineTo(lastPosition.x, lastPosition.y);
-                                bmd.ctx.stroke();
+                                $scope.phaserAddPointForPlayer(
+                                    // @formatter:off
+                                    currentPlayer,
+                                    currentPoint.x, currentPoint.y,
+                                    lastPosition.x, lastPosition.y
+                                    // @formatter:on
+                                );
                             }
 
                             lastPosition = currentPoint;
                         }
 
                         if (currentPlayer.fakePosition && lastPosition && lastPosition.x && lastPosition.y) {
-                            bmd.ctx.moveTo(currentPlayer.fakePosition.x, currentPlayer.fakePosition.y);
-                            bmd.ctx.lineTo(lastPosition.x, lastPosition.y);
-                            bmd.ctx.stroke();
+                            $scope.phaserAddPointForPlayer(
+                                // @formatter:off
+                                currentPlayer,
+                                currentPlayer.fakePosition.x, currentPlayer.fakePosition.y,
+                                lastPosition.x,               lastPosition.y
+                                // @formatter:on
+                            );
                         }
                     }
                     bmd.ctx.closePath();
                 }
             }
-
-            bmd.render();
         };
 
         $scope.phaserFakeNextPosition = function () {
@@ -409,6 +430,10 @@ angular.module('wriggle').controller(
                             }
 
                             currentPlayer.points.push(currentDifference.position);
+
+                            if (currentPlayer.points.length > pointLimit) {
+                                currentPlayer.points.splice(0, 1);
+                            }
                         }
                     }
                 }
