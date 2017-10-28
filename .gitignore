@@ -52,3 +52,6 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots
 /api.paw
+dist
+app/css
+tmp
