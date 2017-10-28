@@ -77,7 +77,7 @@ angular.module('wriggle').controller(
                 bmd.ctx.stroke();
                 bmd.ctx.closePath();
                 bmd.render();
-                bmd.refreshBuffer();
+                //bmd.refreshBuffer();
             };
 
             WriggleGame.prototype.update = function () {
@@ -90,7 +90,7 @@ angular.module('wriggle').controller(
             // and start the game
             game.state.start('wriggle');
             console.log('Gs');
-         
+
             /*
              $scope.phaser = new Phaser.Game(600, 300, Phaser.AUTO, 'phaser-demo');
 
