@@ -7,6 +7,8 @@ const events = {
     joined:         'joined',
     left:           'left',
     playerList:     'playerList',
+    startGame:      'startGame',
+    stopGame:       'stopGame',
     tick:           'tick'
 };
 
@@ -74,8 +76,13 @@ angular.module('wriggle').controller(
         $scope.init = function () {
             $log.log('GameController: init');
 
+            $scope.initKeys();
             $scope.initPhaser();
             $scope.initSocket();
+        };
+
+        $scope.initKeys = function () {
+            document.addEventListener('keydown', $scope.keyDown, false);
         };
 
         $scope.initPhaser = function () {
@@ -156,6 +163,26 @@ angular.module('wriggle').controller(
          * ### TODO                                                                                                    ###
          * #################################################################################################################
          */
+
+        /**
+         * #################################################################################################################
+         * ### Keys                                                                                                      ###
+         * #################################################################################################################
+         */
+
+        $scope.keyDown = function keyDownTextField (event) {
+            const keyCode = event.keyCode;
+
+            $log.log('GameController: keyDown', keyCode);
+
+            if (keyCode === 69) {
+                // E
+                $scope.socket.instance.emit(events.stopGame);
+            } else if (keyCode === 83) {
+                // S
+                $scope.socket.instance.emit(events.startGame);
+            }
+        };
 
         /**
          * #################################################################################################################
