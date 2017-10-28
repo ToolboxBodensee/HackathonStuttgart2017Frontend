@@ -1,7 +1,12 @@
 var game, bmd, sprite, lineGraphics, DemoState, colors;
 
 const events = {
-    displayCreated: 'displayCreated'
+    collision:      'collision',
+    connect:        'connect',
+    displayCreated: 'displayCreated',
+    joined:         'joined',
+    left:           'left',
+    tick:           'tick'
 };
 
 const backendPath = (
@@ -73,6 +78,8 @@ angular.module('wriggle').controller(
         };
 
         $scope.initPhaser = function () {
+            $log.log('GameController: initPhaser');
+
             const WriggleGame = {
                 preload:  $scope.phaserPreload,
                 create:   $scope.phaserCreate,
@@ -92,25 +99,17 @@ angular.module('wriggle').controller(
         };
 
         $scope.initSocket = function () {
-            $scope.socket.instance = io(backendPath);
-            var myId = null;
+            $log.log('GameController: initSocket');
 
-            $scope.socket.instance.on('connect', $scope.socketConnected);
+            $scope.socket.instance = io(backendPath, { query: 'type=display' });
 
-            $scope.socket.instance.on('joined', function (data) {
-                if (myId === data.id) {
-                    console.log('i joined. my postion', data.position);
-                    return;
-                }
-                console.log('someone joined', data);
-            });
-            $scope.socket.instance.on('left', function () {
-                console.log('someone left');
-            });
-            $scope.socket.instance.on('tick', function () {
-                console.log('tick occured');
-            });
-
+            // @formatter:off
+            $scope.socket.instance.on(events.collision, $scope.socketCollision);
+            $scope.socket.instance.on(events.connect,   $scope.socketConnected);
+            $scope.socket.instance.on(events.joined,    $scope.socketJoined);
+            $scope.socket.instance.on(events.left,      $scope.socketPlayerLeft);
+            $scope.socket.instance.on(events.tick,      $scope.socketTick);
+            // @formatter:on
         };
 
         /**
@@ -197,6 +196,11 @@ angular.module('wriggle').controller(
          * #################################################################################################################
          */
 
+        $scope.socketCollision = function (data) {
+            $log.log('GameController: socketCollision', data);
+
+        };
+
         $scope.socketConnected = function () {
             $scope.game.myId = $scope.socket.instance.id;
 
@@ -207,6 +211,21 @@ angular.module('wriggle').controller(
             $scope.$apply(function () {
                 $scope.status.socketInitialized = true;
             });
+        };
+
+        $scope.socketJoined = function (data) {
+            $log.log('GameController: socketJoined', data);
+
+        };
+
+        $scope.socketPlayerLeft = function (data) {
+            $log.log('GameController: socketPlayerLeft', data);
+
+        };
+
+        $scope.socketTick = function (data) {
+            $log.log('GameController: socketTick', data);
+
         };
 
         /**
