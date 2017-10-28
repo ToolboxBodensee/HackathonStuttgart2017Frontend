@@ -195,14 +195,17 @@ angular.module('wriggle').controller(
 
                 bmd.ctx.beginPath();
                 {
+                    // @formatter:off
+                    bmd.ctx.strokeStyle = currentPlayer.color;
+                    bmd.ctx.lineWidth   = 2;
+                    // @formatter:on
+
                     for (const i in currentPlayer.points) {
                         const currentPoint = currentPlayer.points[i];
 
                         if (lastPosition) {
-                            //bmd.ctx.strokeStyle // TODO: color
                             bmd.ctx.moveTo(currentPoint.x, currentPoint.y);
                             bmd.ctx.lineTo(lastPosition.x, lastPosition.y);
-                            bmd.ctx.lineWidth = 4;
                             bmd.ctx.stroke();
                         }
 
