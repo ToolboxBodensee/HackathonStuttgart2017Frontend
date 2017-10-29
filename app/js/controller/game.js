@@ -1,15 +1,15 @@
 var game, bmd, sprite, lineGraphics, DemoState, colors;
 
 const events = {
-    collision:      'collision',
-    connect:        'connect',
+    collision: 'collision',
+    connect: 'connect',
     displayCreated: 'displayCreated',
-    joined:         'joined',
-    left:           'left',
-    playerList:     'playerList',
-    startGame:      'startGame',
-    stopGame:       'stopGame',
-    tick:           'tick'
+    joined: 'joined',
+    left: 'left',
+    playerList: 'playerList',
+    startGame: 'startGame',
+    stopGame: 'stopGame',
+    tick: 'tick'
 };
 
 const backendPath = (
@@ -22,24 +22,22 @@ const pointLimit = 22;
 
 const screenSize = {
     height: 768,
-    width:  1280
+    width: 1280
 };
 
 angular.module('wriggle').controller(
-    'GameController', function (
-        $log
+    'GameController', function ($log
         , $controller
         , $rootScope
         , $scope
-        , $state
-    ) {
+        , $state) {
         /**
          * #################################################################################################################
          * ### Inheritance                                                                                               ###
          * #################################################################################################################
          */
 
-        $controller('BaseController', { $scope: $scope });
+        $controller('BaseController', {$scope: $scope});
 
         /**
          * #################################################################################################################
@@ -48,12 +46,12 @@ angular.module('wriggle').controller(
          */
 
         $scope.game = {
-            myId:       null,
+            myId: null,
             playerList: null
         };
 
         $scope.phaser = {
-            delta:    0,
+            delta: 0,
             instance: null
         };
 
@@ -62,13 +60,13 @@ angular.module('wriggle').controller(
         };
 
         $scope.status = {
-            index:             0,
-            intro:             false,
-            presentation:      true,
-            presentationTime:  3 * 60,
-            numberOfSlides:    $('.slide').length,
-            timer:             moment(this.presentationTime * 1000).format('mm:ss'),
-            gameInitialized:   false,
+            index: 0,
+            intro: false,
+            presentation: true,
+            presentationTime: 3 * 60,
+            numberOfSlides: $('.slide').length,
+            timer: moment(this.presentationTime * 1000).format('mm:ss'),
+            gameInitialized: false,
             socketInitialized: false
         };
 
@@ -97,7 +95,7 @@ angular.module('wriggle').controller(
         };
 
         $scope.presentation = {
-            indicator:    $scope.status.index.toString() + ' / ' + $scope.status.numberOfSlides.toString(),
+            indicator: $scope.status.index.toString() + ' / ' + $scope.status.numberOfSlides.toString(),
             timerStarted: false
         };
 
@@ -131,8 +129,8 @@ angular.module('wriggle').controller(
 
             const WriggleGame = {
                 preload: $scope.phaserPreload,
-                create:  $scope.phaserCreate,
-                update:  $scope.phaserTick
+                create: $scope.phaserCreate,
+                update: $scope.phaserTick
             };
 
             $scope.phaser.instance = new Phaser.Game(
@@ -149,15 +147,15 @@ angular.module('wriggle').controller(
         $scope.initSocket = function () {
             $log.log('GameController: initSocket');
 
-            $scope.socket.instance = io(backendPath, { query: 'type=display' });
+            $scope.socket.instance = io(backendPath, {query: 'type=display'});
 
             // @formatter:off
-            $scope.socket.instance.on(events.collision,  $scope.socketCollision);
-            $scope.socket.instance.on(events.connect,    $scope.socketConnected);
-            $scope.socket.instance.on(events.joined,     $scope.socketJoined);
-            $scope.socket.instance.on(events.left,       $scope.socketPlayerLeft);
+            $scope.socket.instance.on(events.collision, $scope.socketCollision);
+            $scope.socket.instance.on(events.connect, $scope.socketConnected);
+            $scope.socket.instance.on(events.joined, $scope.socketJoined);
+            $scope.socket.instance.on(events.left, $scope.socketPlayerLeft);
             $scope.socket.instance.on(events.playerList, $scope.socketPlayerList);
-            $scope.socket.instance.on(events.tick,       $scope.socketTick);
+            $scope.socket.instance.on(events.tick, $scope.socketTick);
             // @formatter:on
         };
 
@@ -173,8 +171,8 @@ angular.module('wriggle').controller(
             $scope.$apply(function () {
                 for (const playerListPlayerId in $scope.game.playerList) {
                     // @formatter:off
-                    const currentPlayer  = $scope.game.playerList[playerListPlayerId];
-                    currentPlayer.dead   = false;
+                    const currentPlayer = $scope.game.playerList[playerListPlayerId];
+                    currentPlayer.dead = false;
                     currentPlayer.points = [];
                     // @formatter:on
                 }
@@ -187,7 +185,7 @@ angular.module('wriggle').controller(
          * #################################################################################################################
          */
 
-        $scope.keyDown = function keyDownTextField (event) {
+        $scope.keyDown = function keyDownTextField(event) {
             const keyCode = event.keyCode;
 
             $log.log('GameController: keyDown', keyCode);
@@ -197,7 +195,20 @@ angular.module('wriggle').controller(
                 $scope.gameStop();
             } else if (keyCode === 83) {
                 // S
-                $scope.socket.instance.emit(events.startGame);
+                setTimeout(function () {
+                    $('#countdown h1').hide();
+                    $scope.socket.instance.emit(events.startGame);
+                }, 3000);
+                $('#countdown h1').hide();
+                $('#countdown #three').show();
+                setTimeout(function () {
+                    $('#countdown h1').hide();
+                    $('#countdown #two').show();
+                    setTimeout(function () {
+                        $('#countdown h1').hide();
+                        $('#countdown #one').show();
+                    }, 1000)
+                }, 1000)
             } else if (keyCode === 71) {
                 // G
 
@@ -304,7 +315,7 @@ angular.module('wriggle').controller(
                     {
                         // @formatter:off
                         bmd.ctx.strokeStyle = currentPlayer.color;
-                        bmd.ctx.lineWidth   = 8;
+                        bmd.ctx.lineWidth = 8;
                         // @formatter:on
 
                         for (const i in currentPlayer.points) {
@@ -328,7 +339,7 @@ angular.module('wriggle').controller(
                                 // @formatter:off
                                 currentPlayer,
                                 currentPlayer.fakePosition.x, currentPlayer.fakePosition.y,
-                                lastPosition.x,               lastPosition.y,
+                                lastPosition.x, lastPosition.y,
                                 true
                                 // @formatter:on
                             );
@@ -345,10 +356,10 @@ angular.module('wriggle').controller(
 
                 if (currentPlayer.fakePosition) {
                     // @formatter:off
-                    const fakePosition   = currentPlayer.fakePosition;
-                    const deltaVector    = $scope.vectorFromAngle(currentPlayer.direction);
-                          fakePosition.x = fakePosition.x + (playerSpeed * deltaVector.x * $scope.phaser.delta);
-                          fakePosition.y = fakePosition.y + (playerSpeed * deltaVector.y * $scope.phaser.delta);
+                    const fakePosition = currentPlayer.fakePosition;
+                    const deltaVector = $scope.vectorFromAngle(currentPlayer.direction);
+                    fakePosition.x = fakePosition.x + (playerSpeed * deltaVector.x * $scope.phaser.delta);
+                    fakePosition.y = fakePosition.y + (playerSpeed * deltaVector.y * $scope.phaser.delta);
                     // @formatter:on
                 }
             }
@@ -438,10 +449,10 @@ angular.module('wriggle').controller(
                     for (const playerListPlayerId in $scope.game.playerList) {
                         if (playerListPlayerId === diffPlayerId) {
                             // @formatter:off
-                            const currentDifference    = data.diffs[diffPlayerId];
-                            const currentPlayer        = $scope.game.playerList[playerListPlayerId];
+                            const currentDifference = data.diffs[diffPlayerId];
+                            const currentPlayer = $scope.game.playerList[playerListPlayerId];
                             currentPlayer.fakePosition = currentDifference.position;
-                            const pointCount           = currentPlayer.points.length;
+                            const pointCount = currentPlayer.points.length;
                             // @formatter:on
 
                             currentPlayer.direction = currentDifference.direction;
