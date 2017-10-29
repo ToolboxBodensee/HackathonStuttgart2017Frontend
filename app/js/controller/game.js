@@ -219,12 +219,14 @@ angular.module('wriggle').controller(
                         $scope.status.presentation = false;
                     });
                 }, 4000)
-
-            } else if (keyCode === 80) {
-                // P
+            } else if (keyCode === 84) {
+                // T
                 if (!$scope.presentation.timerStarted) {
                     $scope.startTimer();
                 }
+
+            } else if (keyCode === 80) {
+                // P
                 $scope.$apply(function () {
                     $scope.status.intro = false;
                     $scope.status.index = 1;
@@ -232,7 +234,7 @@ angular.module('wriggle').controller(
                         + ' / '
                         + $scope.status.numberOfSlides.toString();
                 })
-            } else if (keyCode === 37) {
+            } else if (keyCode === 37 || keyCode === 33) {
                 // Left
                 if ($scope.status.index > 1) {
                     $scope.$apply(function () {
@@ -242,7 +244,7 @@ angular.module('wriggle').controller(
                             + $scope.status.numberOfSlides.toString();
                     })
                 }
-            } else if (keyCode === 39 || keyCode == 32) {
+            } else if (keyCode === 39 || keyCode === 32 || keyCode === 34) {
                 // Right
                 if ($scope.status.index <= $scope.status.numberOfSlides - 1) {
                     $scope.$apply(function () {
